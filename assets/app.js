@@ -48,8 +48,8 @@ const LOGO = `<svg class="logo-svg" viewBox="0 0 214 40" role="img" aria-label="
   <g class="lg-mark"><path d="M20 7v8M10 27v-5h20v5M20 15v7" fill="none" stroke-width="1.8" stroke-linecap="round"/><circle cx="20" cy="6" r="4" class="lg-top"/><circle cx="10" cy="31" r="4"/><circle cx="30" cy="31" r="4"/></g>
   <text x="44" y="26" class="lg-word">SXX</text><text x="112" y="25" class="lg-sub">CONSULTANCY</text></svg>`;
 const FLAGS = {
-  tr: '<svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#E30A17"/><circle cx="11" cy="10" r="5" fill="#fff"/><circle cx="12.25" cy="10" r="4" fill="#E30A17"/><polygon fill="#fff" points="13.20,10.00 14.83,9.44 14.86,7.72 15.89,9.10 17.54,8.59 16.55,10.00 17.54,11.41 15.89,10.90 14.86,12.28 14.83,10.56"/></svg>',
-  en: '<svg class="flag" viewBox="0 0 60 30" aria-hidden="true"><rect width="60" height="30" fill="#012169"/><path d="M0 0l60 30M60 0L0 30" stroke="#fff" stroke-width="6"/><path d="M0 0l60 30M60 0L0 30" stroke="#C8102E" stroke-width="2.5"/><path d="M30 0v30M0 15h60" stroke="#fff" stroke-width="10"/><path d="M30 0v30M0 15h60" stroke="#C8102E" stroke-width="6"/></svg>',
+  tr: '<svg class="flag" viewBox="0 0 30 20" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect width="30" height="20" fill="#E30A17"/><circle cx="11" cy="10" r="5" fill="#fff"/><circle cx="12.25" cy="10" r="4" fill="#E30A17"/><polygon fill="#fff" points="13.20,10.00 14.83,9.44 14.86,7.72 15.89,9.10 17.54,8.59 16.55,10.00 17.54,11.41 15.89,10.90 14.86,12.28 14.83,10.56"/></svg>',
+  en: '<svg class="flag" viewBox="0 0 60 30" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect width="60" height="30" fill="#012169"/><path d="M0 0l60 30M60 0L0 30" stroke="#fff" stroke-width="6"/><path d="M0 0l60 30M60 0L0 30" stroke="#C8102E" stroke-width="2.5"/><path d="M30 0v30M0 15h60" stroke="#fff" stroke-width="10"/><path d="M30 0v30M0 15h60" stroke="#C8102E" stroke-width="6"/></svg>',
 };
 
 /* ---------------- Shared pieces ---------------- */
@@ -95,47 +95,71 @@ const ROUTES = {
 
 /* ---------------- Home ---------------- */
 function home() {
+  const T = tr();
+  const lines = T ? ['Güçlü yapılar.', '<i>Doğru yetenek.</i>', 'Kurumsal netlik.'] : ['Strong structures.', '<i>The right talent.</i>', 'Corporate clarity.'];
+  const words = T ? ['Executive Search', 'Organizasyon', 'Yetenek', 'Netlik', 'Stratejik İşe Alım', 'Dönüşüm'] : ['Executive Search', 'Organization', 'Talent', 'Clarity', 'Strategic Hiring', 'Transformation'];
+  const facts = T
+    ? [['45', 'dk', 'HR Health Scan görüşmesi'], ['12', 'soru', 'Ücretsiz ön değerlendirme'], ['2', 'yıl', 'Azami aday verisi saklama'], ['0', '₺', 'Adaylardan alınan ücret']]
+    : [['45', 'min', 'HR Health Scan meeting'], ['12', 'questions', 'Free self-assessment'], ['2', 'years', 'Maximum candidate data retention'], ['0', '₺', 'Fee charged to candidates']];
   return `
-  <section class="hero">
-    <div class="wrap hero-in">
-      <div class="hero-copy rv">
-        <span class="kicker">${t('heroKicker')}</span>
-        <h1>${t('heroTitle')}</h1>
-        <p class="lead">${t('heroLead')}</p>
-        <div class="acts"><a class="btn btn-main" href="#/randevu">${I.cal} ${t('heroCta')}</a><a class="btn btn-ghost" href="#/hr-health-scan#test">${I.scan} ${t('heroCta2')}</a></div>
-        <button class="hero-ai" data-ai><span class="hero-ai-av">${I.ai}</span><span><b>${tr() ? 'AI Asistan' : 'AI Assistant'}</b><small>${tr() ? 'İş tanımı, mülakat soruları veya hizmet önerisi isteyin' : 'Ask for a job description, interview questions or advice'}</small></span>${I.arrow}</button>
+  <section class="cine">
+    <canvas id="stars" aria-hidden="true"></canvas>
+    <div class="cine-glow" aria-hidden="true"></div>
+    <div class="wrap cine-in">
+      <div class="cine-copy">
+        <span class="kicker fx-up">${t('heroKicker')}</span>
+        <h1 class="cine-title">${lines.map((l, i) => `<span class="ln"><span style="--d:${0.15 + i * 0.12}s">${l}</span></span>`).join('')}</h1>
+        <p class="lead fx-up" style="--d:.55s">${t('heroLead')}</p>
+        <div class="acts fx-up" style="--d:.7s"><a class="btn btn-main mag" href="#/randevu">${I.cal} ${t('heroCta')}</a><a class="btn btn-glass mag" href="#/hr-health-scan#test">${I.scan} ${t('heroCta2')}</a></div>
+        <button class="hero-ai fx-up mag" style="--d:.85s" data-ai><span class="hero-ai-av">${I.ai}</span><span><b>${T ? 'AI Asistan' : 'AI Assistant'}</b><small>${T ? 'İş tanımı, mülakat soruları veya hizmet önerisi isteyin' : 'Ask for a job description, interview questions or advice'}</small></span>${I.arrow}</button>
       </div>
-      <div class="hero-art rv" aria-hidden="true"><canvas id="org"></canvas><div class="plate"><span id="orgLbl">${tr() ? 'Doğru rol' : 'Right role'}</span><i></i><span>${tr() ? 'Doğru yetenek' : 'Right talent'}</span><i></i><span>${tr() ? 'Doğru yapı' : 'Right structure'}</span></div></div>
+    </div>
+    <div class="wrap cine-foot">
+      <span class="cine-meta">${T ? 'Butik danışmanlık · Aynı anda sınırlı sayıda kurum' : 'Boutique consultancy · A limited number of clients at a time'}</span>
+      <span class="cine-scroll"><i></i>${T ? 'Keşfedin' : 'Scroll'}</span>
+      <span class="cine-meta right">TR · EN</span>
     </div>
   </section>
 
+  <section class="band2" aria-hidden="true"><div class="band2-track">${[0, 1].map(() => words.map((w, i) => `<span class="${i % 2 ? 'solid' : ''}">${w}</span><em>✦</em>`).join('')).join('')}</div></section>
+
+  <section class="statement"><div class="wrap">
+    <span class="kicker">${T ? 'Yaklaşımımız' : 'Our approach'}</span>
+    <p class="stmt" id="stmt">${(t('approach')[0] + ' ' + t('approach')[1]).split(' ').map((w) => `<span>${w}</span>`).join(' ')}</p>
+  </div></section>
+
+  <section class="sec probs2"><div class="wrap">
+    <div class="sec-head rv"><span class="kicker">${T ? 'Problemler' : 'Problems'}</span><h2>${t('problemsTitle')}</h2></div>
+    <ol class="plist">${t('problems').map(([h, p], i) => `<li class="rv"><span class="pl-no">0${i + 1}</span><h3>${h}</h3><p>${p}</p><span class="pl-arrow">${I.arrow}</span></li>`).join('')}</ol>
+  </div></section>
+
+  <section class="hsc" id="hsc">
+    <div class="hsc-pin">
+      <div class="wrap hsc-head"><span class="kicker">${t('services')}</span><h2>${t('servicesTitle')}</h2><span class="hsc-count"><b id="hscNo">01</b> / 0${SERVICES.length}</span></div>
+      <div class="hsc-track" id="hscTrack">${SERVICES.map((s, i) => `<article class="hsc-card">
+        <span class="hsc-num">0${i + 1}</span><span class="svc-ico">${I[s.icon]}</span>
+        <h3>${L(s.title)}</h3><p>${L(s.long)}</p><div class="svc-out">${I.check} ${L(s.outcome)}</div>
+        <a class="link-arrow" href="#/hizmetler" data-jump="s-${s.id}">${T ? 'Detaylar' : 'Details'} ${I.arrow}</a></article>`).join('')}
+        <article class="hsc-card end"><h3>${T ? 'Hangisi size uygun?' : 'Which one fits you?'}</h3><p>${t('scanTeaser')}</p><a class="btn btn-main" href="#/hr-health-scan#test">${T ? 'Ön değerlendirmeye başla' : 'Start the self-assessment'} ${I.arrow}</a></article>
+      </div>
+      <div class="wrap hsc-bar"><i id="hscBar"></i></div>
+    </div>
+  </section>
+
+  <section class="sec facts"><div class="wrap facts-grid">${facts.map(([n, u, l]) => `<div class="fact rv"><b><span data-count="${n}">0</span><small>${u}</small></b><span>${l}</span></div>`).join('')}</div></section>
+
+  <section class="sec ink stack-sec"><div class="wrap">
+    <div class="sec-head rv"><span class="kicker">${T ? 'Süreç' : 'Process'}</span><h2>${t('howTitle')}</h2><p>${t('howLead')}</p></div>
+    <div class="stack">${t('how').map(([h, p], i) => `<article class="stack-card" style="--i:${i}"><span class="how-no">${['I', 'II', 'III'][i]}</span><div><h3>${h}</h3><p>${p}</p></div><span class="stack-step">${T ? 'Adım' : 'Step'} ${i + 1} / 3</span></article>`).join('')}</div>
+  </div></section>
+
   <section class="sec"><div class="wrap">
-    <div class="sec-head rv"><span class="kicker">${tr() ? 'Problemler' : 'Problems'}</span><h2>${t('problemsTitle')}</h2><p>${t('problemsLead')}</p></div>
-    <div class="probs">${t('problems').map(([h, p], i) => `<div class="prob rv"><span class="prob-no">0${i + 1}</span><h3>${h}</h3><p>${p}</p></div>`).join('')}</div>
-  </div></section>
-
-  <section class="sec alt"><div class="wrap">
-    <div class="sec-head row rv"><div><span class="kicker">${t('services')}</span><h2>${t('servicesTitle')}</h2><p>${t('servicesLead')}</p></div><a class="btn btn-ghost" href="#/hizmetler">${t('services')} ${I.arrow}</a></div>
-    <div class="svcs">${SERVICES.map((s, i) => `<a class="svc rv" href="#/hizmetler" data-jump="s-${s.id}"><span class="svc-ico">${I[s.icon]}</span><span class="svc-no">0${i + 1}</span><h3>${L(s.title)}</h3><p>${L(s.short)}</p><span class="svc-out">${I.check} ${L(s.outcome)}</span></a>`).join('')}</div>
-  </div></section>
-
-  <section class="sec"><div class="wrap split">
-    <div class="rv"><span class="kicker">${tr() ? 'Yaklaşımımız' : 'Our approach'}</span><h2>${t('approachTitle')}</h2></div>
-    <div class="approach rv">${t('approach').map((p, i) => `<p class="${i ? '' : 'lead-p'}">${p}</p>`).join('')}</div>
-  </div></section>
-
-  <section class="sec ink"><div class="wrap">
-    <div class="sec-head rv"><span class="kicker">${tr() ? 'Süreç' : 'Process'}</span><h2>${t('howTitle')}</h2><p>${t('howLead')}</p></div>
-    <ol class="how">${t('how').map(([h, p], i) => `<li class="rv"><span class="how-no">${['I', 'II', 'III'][i]}</span><h3>${h}</h3><p>${p}</p></li>`).join('')}</ol>
-  </div></section>
-
-  <section class="sec"><div class="wrap">
-    <div class="sec-head rv"><span class="kicker">${tr() ? 'Araçlar' : 'Tools'}</span><h2>${t('toolsTitle')}</h2><p>${t('toolsLead')}</p></div>
+    <div class="sec-head rv"><span class="kicker">${T ? 'Araçlar' : 'Tools'}</span><h2>${t('toolsTitle')}</h2><p>${t('toolsLead')}</p></div>
     <div class="tools">
-      <a class="tool rv" href="#/hr-health-scan#test"><span class="tool-ico">${I.scan}</span><span class="kicker">HR Health Scan</span><h3>${tr() ? 'Organizasyon sağlık testi' : 'Organizational health check'}</h3><p>${t('scanTeaser')}</p>
-        <span class="tool-viz">${radarSVG([82, 55, 68, 40], true)}</span><span class="btn btn-main">${tr() ? 'Teste başla' : 'Start the check'} ${I.arrow}</span></a>
-      <a class="tool rv" href="#/maliyet"><span class="tool-ico">${I.calc}</span><span class="kicker">${tr() ? 'Hesaplayıcı' : 'Calculator'}</span><h3>${t('calc')}</h3><p>${t('calcTeaser')}</p>
-        <span class="tool-num"><small>${tr() ? 'Örnek' : 'Example'}</small><b>${money(612000)}</b><small>${tr() ? '60.000 ₺ maaşlı bir rolde 6 ayda' : 'for a 60,000 ₺/month role over 6 months'}</small></span><span class="btn btn-ghost">${tr() ? 'Hesapla' : 'Calculate'} ${I.arrow}</span></a>
+      <a class="tool rv" href="#/hr-health-scan#test"><span class="tool-ico">${I.scan}</span><span class="kicker">HR Health Scan</span><h3>${T ? 'Organizasyon sağlık testi' : 'Organizational health check'}</h3><p>${t('scanTeaser')}</p>
+        <span class="tool-viz">${radarSVG([82, 55, 68, 40], true)}</span><span class="btn btn-main">${T ? 'Teste başla' : 'Start the check'} ${I.arrow}</span></a>
+      <a class="tool rv" href="#/maliyet"><span class="tool-ico">${I.calc}</span><span class="kicker">${T ? 'Hesaplayıcı' : 'Calculator'}</span><h3>${t('calc')}</h3><p>${t('calcTeaser')}</p>
+        <span class="tool-num"><small>${T ? 'Örnek' : 'Example'}</small><b>${money(612000)}</b><small>${T ? '60.000 ₺ maaşlı bir rolde 6 ayda' : 'for a 60,000 ₺/month role over 6 months'}</small></span><span class="btn btn-ghost">${T ? 'Hesapla' : 'Calculate'} ${I.arrow}</span></a>
     </div>
   </div></section>
 
@@ -144,12 +168,16 @@ function home() {
     <div class="arts">${ARTICLES.map((a, i) => articleCard(a, i === 0)).join('')}</div>
   </div></section>
 
-  <section class="sec"><div class="wrap founder rv">
-    <div class="founder-mono" aria-hidden="true"><span>${I.user}</span></div>
-    <div><span class="kicker">${t('founderTitle')}</span><blockquote>“${t('founderQuote')}”</blockquote><p>${t('founderText')}</p><b class="founder-role">${t('founderRole')}</b>
-      <div class="acts"><a class="btn btn-ghost" href="${COMPANY.social.linkedin}" target="_blank" rel="noopener">${I.linkedin} LinkedIn</a><a class="btn btn-main" href="#/randevu">${t('book')} ${I.arrow}</a></div></div>
+  <section class="quote-sec"><div class="wrap quote-in rv">
+    <span class="quote-mark" aria-hidden="true">“</span>
+    <blockquote>${t('founderQuote')}</blockquote>
+    <span class="founder-role">— ${t('founderRole')}</span>
   </div></section>
-  ${cta()}`;
+
+  <section class="finale"><div class="wrap finale-in">
+    <h2 class="rv">${T ? 'Doğru yetenek,<br><i>doğru yapıda.</i>' : 'The right talent,<br><i>in the right structure.</i>'}</h2>
+    <a class="orb mag rv" href="#/randevu"><span>${t('book')}</span>${I.arrow}</a>
+  </div></section>`;
 }
 
 /* ---------------- Services / employers / candidates / about ---------------- */
@@ -366,12 +394,14 @@ const notFound = () => pageHead('404', [['404']]) + `<section class="sec"><div c
 function renderChrome() {
   document.documentElement.lang = lang;
   $('#logo').innerHTML = LOGO; $('#introMark').innerHTML = LOGO;
-  $('#tbL').innerHTML = `<a href="${COMPANY.phoneHref}">${I.phone} ${COMPANY.phone}</a><a href="mailto:${COMPANY.email}" class="hide-s">${I.mail} ${COMPANY.email}</a>`;
-  $('#tbR').innerHTML = `<a href="#/hr-health-scan" class="tb-hi">${I.scan} HR Health Scan</a><span class="tb-sep"></span><a href="${COMPANY.social.linkedin}" target="_blank" rel="noopener" aria-label="LinkedIn">${I.linkedin}</a><a href="${COMPANY.social.instagram}" target="_blank" rel="noopener" aria-label="Instagram">${I.instagram}</a>`;
   $('#nav').innerHTML = [['', 'home'], ['hizmetler', 'services'], ['icgoruler', 'insights', 'makale'], ['isverenler', 'employers'], ['adaylar', 'candidates'], ['hakkimizda', 'about'], ['iletisim', 'contact']]
     .map(([r, k, also]) => `<a href="#/${r}" data-r="${r}${also ? ' ' + also : ''}">${t(k)}</a>`).join('') + `<a class="nav-book" href="#/randevu">${t('book')}</a>`;
   $('#aiPill').innerHTML = `${I.ai}<span>${tr() ? 'AI Asistan' : 'AI Assistant'}</span>`;
-  $('#langSw').innerHTML = [['tr', 'Türkçe'], ['en', 'English']].map(([l, n]) => `<button data-lang="${l}" class="${l === lang ? 'on' : ''}" aria-pressed="${l === lang}" title="${n}">${FLAGS[l]}<span>${l.toUpperCase()}</span></button>`).join('');
+  const LANGS = [['tr', 'Türkçe', 'Turkish'], ['en', 'English', 'İngilizce']];
+  const cur = LANGS.find((x) => x[0] === lang);
+  $('#langBtn').innerHTML = `<span class="lang-flag">${FLAGS[lang]}</span><span class="lang-code">${lang.toUpperCase()}</span><svg class="lang-chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>`;
+  $('#langBtn').setAttribute('aria-label', (tr() ? 'Dil: ' : 'Language: ') + cur[1]);
+  $('#langMenu').innerHTML = `<span class="lang-title">${tr() ? 'Dil seçin' : 'Choose language'}</span>` + LANGS.map(([l, n, alt]) => `<button role="menuitemradio" aria-checked="${l === lang}" data-lang="${l}" class="${l === lang ? 'on' : ''}"><span class="lang-flag">${FLAGS[l]}</span><span class="lang-name"><b>${n}</b><small>${alt}</small></span><svg class="lang-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></button>`).join('');
   $('#hdrBook').innerHTML = `${I.cal} ${t('book')}`;
   $('#ftr').innerHTML = `<div class="wrap ftr-grid">
     <div><a href="#/" class="logo ftr-logo">${LOGO}</a><p>${tr() ? 'Executive search, stratejik işe alım ve organizasyonel dönüşüm danışmanlığında butik çözümler.' : 'Boutique solutions in executive search, strategic recruitment and organizational transformation.'}</p>
@@ -418,11 +448,11 @@ function after() {
   obs?.disconnect();
   obs = new IntersectionObserver((es) => es.forEach((e) => { if (!e.isIntersecting) return; e.target.classList.add('in'); obs.unobserve(e.target); }), { threshold: 0.1 });
   $$('.rv', app).forEach((el, i) => { if (el.getBoundingClientRect().top < innerHeight) { el.classList.add('in'); return; } el.style.transitionDelay = (i % 4) * 0.06 + 's'; obs.observe(el); });
-  if ($('#org')) orgScene();
   if ($('#quiz')) { quizAns = []; renderQuiz(); }
   if ($('#calcOut')) { runCalc(); $$('.calc input').forEach((i) => i.addEventListener('input', runCalc)); }
   if ($('#bsum')) bookSummary();
   bindForms();
+  window.FX?.mount();
 }
 function bindForms() {
   $$('form.frm').forEach((f) => f.addEventListener('submit', (e) => {
@@ -439,80 +469,6 @@ function bindForms() {
   }));
 }
 
-/* ---------------- Hero: organization structure scene ---------------- */
-let raf;
-function orgScene() {
-  cancelAnimationFrame(raf);
-  const cv = $('#org'), ctx = cv.getContext('2d');
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const css = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
-  let S = 0;
-  const resize = () => { const dpr = Math.min(devicePixelRatio || 1, 2); S = cv.offsetWidth; cv.width = cv.height = S * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); };
-  const names = tr()
-    ? [['Genel Müdür'], ['Operasyon', 'Finans', 'Satış'], ['Planlama', 'Üretim', 'Kontrol', 'İK', 'Teknik Satış', 'Bölge Müdürü']]
-    : [['CEO'], ['Operations', 'Finance', 'Sales'], ['Planning', 'Production', 'Controlling', 'HR', 'Tech Sales', 'Regional Mgr']];
-  const nodes = [{ x: .5, y: .13, l: 0, n: names[0][0] }];
-  [.172, .5, .828].forEach((x, i) => nodes.push({ x, y: .42, l: 1, p: 0, n: names[1][i] }));
-  [[.088, 1], [.256, 1], [.416, 2], [.584, 2], [.744, 3], [.912, 3]].forEach(([x, p], i) => nodes.push({ x, y: .7, l: 2, p, n: names[2][i] }));
-  nodes.forEach((n) => { n.fill = 1; });
-  const pool = Array.from({ length: 22 }, () => ({ x: Math.random(), y: .86 + Math.random() * .1, vx: (Math.random() - .5) * .0009, r: 1.2 + Math.random() * 1.8, a: .25 + Math.random() * .5 }));
-  let slot = 4 + Math.floor(Math.random() * 6), phase = 'wait', tm = 0, talent = null;
-  nodes[slot].fill = 0;
-  const rr = (x, y, w, h, r) => { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); };
-  let dash = 0;
-  const draw = () => {
-    if (!document.body.contains(cv)) return;
-    const gold = css('--gold'), ink = css('--text'), surf = css('--surface'), line = css('--line'), muted = css('--muted');
-    ctx.clearRect(0, 0, S, S);
-    // connectors (elbow lines with a slow flowing dash)
-    dash -= .25;
-    ctx.lineWidth = 1; ctx.strokeStyle = gold; ctx.globalAlpha = .55; ctx.setLineDash([3, 5]); ctx.lineDashOffset = dash;
-    nodes.forEach((n) => { if (n.p === undefined) return; const p = nodes[n.p]; const my = (p.y + n.y) / 2;
-      ctx.beginPath(); ctx.moveTo(p.x * S, p.y * S + 16); ctx.lineTo(p.x * S, my * S); ctx.lineTo(n.x * S, my * S); ctx.lineTo(n.x * S, n.y * S - 16); ctx.stroke(); });
-    ctx.setLineDash([]); ctx.globalAlpha = 1;
-    // talent pool
-    pool.forEach((d) => { d.x += d.vx; if (d.x < 0 || d.x > 1) d.vx *= -1; ctx.beginPath(); ctx.arc(d.x * S, d.y * S, d.r, 0, 7); ctx.fillStyle = muted; ctx.globalAlpha = d.a; ctx.fill(); });
-    ctx.globalAlpha = 1;
-    ctx.font = `600 ${Math.max(9, S * .02)}px Manrope, sans-serif`; ctx.fillStyle = muted; ctx.textAlign = 'center';
-    ctx.fillText(tr() ? 'YETENEK HAVUZU' : 'TALENT POOL', S * .5, S * .995);
-    // node cards
-    nodes.forEach((n, i) => {
-      const w = n.l === 0 ? S * .26 : n.l === 1 ? S * .2 : S * .152, h = S * .075, x = n.x * S - w / 2, y = n.y * S - h / 2;
-      ctx.save();
-      if (n.fill >= 1) { ctx.shadowColor = 'rgba(0,0,0,.25)'; ctx.shadowBlur = 14; ctx.shadowOffsetY = 4; }
-      rr(x, y, w, h, 8); ctx.fillStyle = surf; ctx.fill(); ctx.restore();
-      rr(x, y, w, h, 8);
-      if (n.fill < 1) { ctx.setLineDash([4, 4]); ctx.strokeStyle = gold; ctx.lineWidth = 1.2; ctx.stroke(); ctx.setLineDash([]); }
-      else { ctx.strokeStyle = i === slot && phase === 'done' ? gold : line; ctx.lineWidth = i === slot && phase === 'done' ? 2 : 1; ctx.stroke(); }
-      if (i === slot && phase === 'done') { ctx.save(); ctx.globalAlpha = .18 * (1 - Math.min(tm / 120, 1)) + .08; rr(x - 6, y - 6, w + 12, h + 12, 12); ctx.fillStyle = gold; ctx.fill(); ctx.restore(); }
-      const label = n.fill < 1 ? (tr() ? 'Açık pozisyon' : 'Open role') : n.n, done = i === slot && phase === 'done';
-      let fs = Math.max(8, S * (n.l === 2 ? .02 : .025));
-      ctx.font = `${n.l === 0 ? 700 : 600} ${fs}px Manrope, sans-serif`;
-      const room = w - (done ? 30 : 14);
-      while (ctx.measureText(label).width > room && fs > 7) { fs -= .5; ctx.font = `${n.l === 0 ? 700 : 600} ${fs}px Manrope, sans-serif`; }
-      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      ctx.fillStyle = n.fill < 1 ? gold : ink; ctx.fillText(label, n.x * S + (done ? 8 : 0), n.y * S);
-      if (i === slot && phase === 'done') { ctx.beginPath(); ctx.arc(x + 12, n.y * S, 5, 0, 7); ctx.fillStyle = gold; ctx.fill(); }
-    });
-    // talent travelling from the pool into the open role
-    tm++;
-    if (phase === 'wait' && tm > 70) { const src = pool[Math.floor(Math.random() * pool.length)]; talent = { sx: src.x, sy: src.y, k: 0 }; phase = 'fly'; tm = 0; }
-    if (phase === 'fly') {
-      talent.k = Math.min(1, talent.k + .009); const e = talent.k < .5 ? 2 * talent.k * talent.k : 1 - Math.pow(-2 * talent.k + 2, 2) / 2;
-      const tx = nodes[slot].x, ty = nodes[slot].y, cx = (talent.sx + tx) / 2 + .18, cy = (talent.sy + ty) / 2;
-      const x = (1 - e) * (1 - e) * talent.sx + 2 * (1 - e) * e * cx + e * e * tx, y = (1 - e) * (1 - e) * talent.sy + 2 * (1 - e) * e * cy + e * e * ty;
-      const g = ctx.createRadialGradient(x * S, y * S, 0, x * S, y * S, 18); g.addColorStop(0, gold); g.addColorStop(1, 'rgba(0,0,0,0)');
-      ctx.beginPath(); ctx.arc(x * S, y * S, 18, 0, 7); ctx.fillStyle = g; ctx.globalAlpha = .45; ctx.fill(); ctx.globalAlpha = 1;
-      ctx.beginPath(); ctx.arc(x * S, y * S, 5.5, 0, 7); ctx.fillStyle = gold; ctx.fill();
-      if (talent.k >= 1) { nodes[slot].fill = 1; phase = 'done'; tm = 0; }
-    }
-    if (phase === 'done' && tm > 170) { let ns; do { ns = 4 + Math.floor(Math.random() * 6); } while (ns === slot); slot = ns; nodes[slot].fill = 0; phase = 'wait'; tm = 0; }
-    if (!reduce) raf = requestAnimationFrame(draw);
-  };
-  resize(); draw();
-  window.onresize = () => $('#org') && resize();
-}
-
 /* ==========================================================================
    Global UI
    ========================================================================== */
@@ -522,10 +478,15 @@ const burger = $('#burger'), nav = $('#nav');
 burger.addEventListener('click', () => { const o = nav.classList.toggle('open'); burger.setAttribute('aria-expanded', o); document.body.classList.toggle('lock', o); });
 nav.addEventListener('click', (e) => { if (e.target.closest('a')) closeMenus(); });
 function closeMenus() { nav.classList.remove('open'); burger.setAttribute('aria-expanded', 'false'); document.body.classList.remove('lock'); }
-$('#langSw').addEventListener('click', (e) => {
-  const b = e.target.closest('[data-lang]'); if (!b || b.dataset.lang === lang) return;
+const langBox = $('#lang');
+$('#langBtn').addEventListener('click', (e) => { e.stopPropagation(); const o = langBox.classList.toggle('open'); $('#langBtn').setAttribute('aria-expanded', o); });
+document.addEventListener('click', (e) => { if (!e.target.closest('#lang')) { langBox.classList.remove('open'); $('#langBtn').setAttribute('aria-expanded', 'false'); } });
+$('#langMenu').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-lang]'); if (!b) return;
+  langBox.classList.remove('open');
+  if (b.dataset.lang === lang) return;
   lang = b.dataset.lang; try { localStorage.setItem('sxc-lang', lang); } catch (e2) {}
-  renderChrome(); render(); greeted = false; $('#aiBody').innerHTML = '';
+  window.FX?.curtain(() => { renderChrome(); render(); greeted = false; $('#aiBody').innerHTML = ''; });
 });
 $('#themeBtn').addEventListener('click', () => {
   const r = document.documentElement; const dark = r.dataset.theme ? r.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
