@@ -48,17 +48,17 @@ const LOGO = `<svg class="logo-svg" viewBox="0 0 214 40" role="img" aria-label="
   <g class="lg-mark"><path d="M20 7v8M10 27v-5h20v5M20 15v7" fill="none" stroke-width="1.8" stroke-linecap="round"/><circle cx="20" cy="6" r="4" class="lg-top"/><circle cx="10" cy="31" r="4"/><circle cx="30" cy="31" r="4"/></g>
   <text x="44" y="26" class="lg-word">SXX</text><text x="112" y="25" class="lg-sub">CONSULTANCY</text></svg>`;
 const FLAGS = {
-  tr: '<svg class="flag" viewBox="0 0 30 20" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect width="30" height="20" fill="#E30A17"/><circle cx="11" cy="10" r="5" fill="#fff"/><circle cx="12.25" cy="10" r="4" fill="#E30A17"/><polygon fill="#fff" points="13.20,10.00 14.83,9.44 14.86,7.72 15.89,9.10 17.54,8.59 16.55,10.00 17.54,11.41 15.89,10.90 14.86,12.28 14.83,10.56"/></svg>',
+  tr: '<svg class="flag" viewBox="1.5 0 20 20" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect width="30" height="20" fill="#E30A17"/><circle cx="11" cy="10" r="5" fill="#fff"/><circle cx="12.25" cy="10" r="4" fill="#E30A17"/><polygon fill="#fff" points="13.20,10.00 14.83,9.44 14.86,7.72 15.89,9.10 17.54,8.59 16.55,10.00 17.54,11.41 15.89,10.90 14.86,12.28 14.83,10.56"/></svg>',
   en: '<svg class="flag" viewBox="0 0 60 30" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect width="60" height="30" fill="#012169"/><path d="M0 0l60 30M60 0L0 30" stroke="#fff" stroke-width="6"/><path d="M0 0l60 30M60 0L0 30" stroke="#C8102E" stroke-width="2.5"/><path d="M30 0v30M0 15h60" stroke="#fff" stroke-width="10"/><path d="M30 0v30M0 15h60" stroke="#C8102E" stroke-width="6"/></svg>',
 };
 
 /* ---------------- Shared pieces ---------------- */
-function pageHead(title, crumbs = [], lead = '', kicker = '') {
+function pageHead(title, crumbs = [], lead = '', kicker = '', img = '') {
   const bc = [[t('home'), '#/'], ...crumbs].map(([n, h], i, a) => (i < a.length - 1 && h ? `<a href="${h}">${esc(n)}</a>` : `<span>${esc(n)}</span>`)).join('<i>/</i>');
-  return `<section class="phead"><div class="wrap"><nav class="crumbs">${bc}</nav>${kicker ? `<span class="kicker">${kicker}</span>` : ''}<h1>${title}</h1>${lead ? `<p>${lead}</p>` : ''}</div><div class="phead-orn" aria-hidden="true"></div></section>`;
+  return `<section class="phead ${img ? 'has-img' : ''}"><div class="wrap"><div><nav class="crumbs">${bc}</nav>${kicker ? `<span class="kicker">${kicker}</span>` : ''}<h1>${title}</h1>${lead ? `<p>${lead}</p>` : ''}</div>${img ? `<div class="phead-img"><img src="assets/img/${img}" alt=""></div>` : ''}</div></section>`;
 }
-const cta = () => `<section class="cta"><div class="wrap cta-in rv"><div><h2>${t('ctaTitle')}</h2><p>${t('ctaLead')}</p></div>
-  <div class="acts"><a class="btn btn-light" href="#/randevu">${I.cal} ${t('book')}</a><a class="btn btn-line" href="#/hr-health-scan">${t('scan')} ${I.arrow}</a></div></div></section>`;
+const cta = () => `<section class="cta"><div class="cta-bg"><img src="assets/img/workshop.jpg" alt="" loading="lazy"></div><div class="wrap cta-in rv"><div><h2>${t('ctaTitle')}</h2><p>${t('ctaLead')}</p></div>
+  <div class="acts"><a class="btn btn-light mag" href="#/randevu">${I.cal} ${t('book')}</a><a class="btn btn-line" href="#/hr-health-scan">${t('scan')} ${I.arrow}</a></div></div></section>`;
 function field(f) {
   const lbl = (f.label || t(f.k)) + (f.req ? ' *' : '');
   const c = f.full ? 'full' : '';
@@ -94,66 +94,68 @@ const ROUTES = {
 };
 
 /* ---------------- Home ---------------- */
+const PIC = 'assets/img/';
+const SVC_IMG = { analiz: 'boardroom.jpg', danismanlik: 'consulting.jpg', surec: 'office.jpg', isealim: 'handshake.jpg' };
+const PROB_ICONS = ['target', 'q', 'clock', 'org'];
 function home() {
   const T = tr();
-  const lines = T ? ['Güçlü yapılar.', '<i>Doğru yetenek.</i>', 'Kurumsal netlik.'] : ['Strong structures.', '<i>The right talent.</i>', 'Corporate clarity.'];
-  const words = T ? ['Executive Search', 'Organizasyon', 'Yetenek', 'Netlik', 'Stratejik İşe Alım', 'Dönüşüm'] : ['Executive Search', 'Organization', 'Talent', 'Clarity', 'Strategic Hiring', 'Transformation'];
-  const facts = T
+  const trust = T
     ? [['45', 'dk', 'HR Health Scan görüşmesi'], ['12', 'soru', 'Ücretsiz ön değerlendirme'], ['2', 'yıl', 'Azami aday verisi saklama'], ['0', '₺', 'Adaylardan alınan ücret']]
-    : [['45', 'min', 'HR Health Scan meeting'], ['12', 'questions', 'Free self-assessment'], ['2', 'years', 'Maximum candidate data retention'], ['0', '₺', 'Fee charged to candidates']];
+    : [['45', 'min', 'HR Health Scan meeting'], ['12', 'q.', 'Free self-assessment'], ['2', 'yrs', 'Max. candidate data retention'], ['0', '₺', 'Fee charged to candidates']];
   return `
-  <section class="cine">
-    <canvas id="stars" aria-hidden="true"></canvas>
-    <div class="cine-glow" aria-hidden="true"></div>
-    <div class="wrap cine-in">
-      <div class="cine-copy">
-        <span class="kicker fx-up">${t('heroKicker')}</span>
-        <h1 class="cine-title">${lines.map((l, i) => `<span class="ln"><span style="--d:${0.15 + i * 0.12}s">${l}</span></span>`).join('')}</h1>
-        <p class="lead fx-up" style="--d:.55s">${t('heroLead')}</p>
-        <div class="acts fx-up" style="--d:.7s"><a class="btn btn-main mag" href="#/randevu">${I.cal} ${t('heroCta')}</a><a class="btn btn-glass mag" href="#/hr-health-scan#test">${I.scan} ${t('heroCta2')}</a></div>
-        <button class="hero-ai fx-up mag" style="--d:.85s" data-ai><span class="hero-ai-av">${I.ai}</span><span><b>${T ? 'AI Asistan' : 'AI Assistant'}</b><small>${T ? 'İş tanımı, mülakat soruları veya hizmet önerisi isteyin' : 'Ask for a job description, interview questions or advice'}</small></span>${I.arrow}</button>
+  <section class="hero2"><div class="wrap">
+    <div class="hero2-in">
+      <div>
+        <span class="kicker fx-up" style="--d:.1s">${t('heroKicker')}</span>
+        <h1 class="fx-up" style="--d:.2s">${T ? 'Doğru yetenek,<br><i>doğru yapıda.</i>' : 'The right talent,<br><i>in the right structure.</i>'}</h1>
+        <p class="lead fx-up" style="--d:.35s">${t('heroLead')}</p>
+        <div class="acts fx-up" style="--d:.45s"><a class="btn btn-main mag" href="#/randevu">${I.cal} ${t('heroCta')}</a><a class="btn btn-ghost" href="#/hr-health-scan#test">${I.scan} ${t('heroCta2')}</a></div>
+        <button class="hero-ai fx-up" style="--d:.55s" data-ai><span class="hero-ai-av">${I.ai}</span><span><b>${T ? 'AI Asistan' : 'AI Assistant'}</b><small>${T ? 'İş tanımı, mülakat soruları veya hizmet önerisi isteyin' : 'Ask for a job description, interview questions or advice'}</small></span>${I.arrow}</button>
+      </div>
+      <div class="hero-media fx-up" style="--d:.3s">
+        <div class="hero-photo"><img src="${PIC}hero-consult.jpg" alt="${T ? 'İki profesyonel bir danışmanlık görüşmesinde' : 'Two professionals in a consulting meeting'}"></div>
+        <div class="hero-portrait"><img src="${PIC}portrait.jpg" alt=""></div>
+        <div class="float-card fc-a"><span class="fc-ico">${I.scan}</span><span><b>HR Health Scan</b><small>${T ? '45 dk · online görüşme' : '45 min · online meeting'}</small></span></div>
+        <div class="float-card fc-b"><span class="fc-ico">${I.shield}</span><span><b>${T ? 'Gizlilik esaslı' : 'Fully confidential'}</b><small>${T ? 'Aday ve kurum bilgileri korunur' : 'Candidate and client data protected'}</small></span></div>
       </div>
     </div>
-    <div class="wrap cine-foot">
-      <span class="cine-meta">${T ? 'Butik danışmanlık · Aynı anda sınırlı sayıda kurum' : 'Boutique consultancy · A limited number of clients at a time'}</span>
-      <span class="cine-scroll"><i></i>${T ? 'Keşfedin' : 'Scroll'}</span>
-      <span class="cine-meta right">TR · EN</span>
-    </div>
-  </section>
-
-  <section class="band2" aria-hidden="true"><div class="band2-track">${[0, 1].map(() => words.map((w, i) => `<span class="${i % 2 ? 'solid' : ''}">${w}</span><em>✦</em>`).join('')).join('')}</div></section>
-
-  <section class="statement"><div class="wrap">
-    <span class="kicker">${T ? 'Yaklaşımımız' : 'Our approach'}</span>
-    <p class="stmt" id="stmt">${(t('approach')[0] + ' ' + t('approach')[1]).split(' ').map((w) => `<span>${w}</span>`).join(' ')}</p>
+    <div class="trust">${trust.map(([n, u, l]) => `<div class="rv"><b><span data-count="${n}">0</span><small>${u}</small></b><span>${l}</span></div>`).join('')}</div>
   </div></section>
 
-  <section class="sec probs2"><div class="wrap">
-    <div class="sec-head rv"><span class="kicker">${T ? 'Problemler' : 'Problems'}</span><h2>${t('problemsTitle')}</h2></div>
-    <ol class="plist">${t('problems').map(([h, p], i) => `<li class="rv"><span class="pl-no">0${i + 1}</span><h3>${h}</h3><p>${p}</p><span class="pl-arrow">${I.arrow}</span></li>`).join('')}</ol>
-  </div></section>
-
-  <section class="hsc" id="hsc">
-    <div class="hsc-pin">
-      <div class="wrap hsc-head"><span class="kicker">${t('services')}</span><h2>${t('servicesTitle')}</h2><span class="hsc-count"><b id="hscNo">01</b> / 0${SERVICES.length}</span></div>
-      <div class="hsc-track" id="hscTrack">${SERVICES.map((s, i) => `<article class="hsc-card">
-        <span class="hsc-num">0${i + 1}</span><span class="svc-ico">${I[s.icon]}</span>
-        <h3>${L(s.title)}</h3><p>${L(s.long)}</p><div class="svc-out">${I.check} ${L(s.outcome)}</div>
-        <a class="link-arrow" href="#/hizmetler" data-jump="s-${s.id}">${T ? 'Detaylar' : 'Details'} ${I.arrow}</a></article>`).join('')}
-        <article class="hsc-card end"><h3>${T ? 'Hangisi size uygun?' : 'Which one fits you?'}</h3><p>${t('scanTeaser')}</p><a class="btn btn-main" href="#/hr-health-scan#test">${T ? 'Ön değerlendirmeye başla' : 'Start the self-assessment'} ${I.arrow}</a></article>
-      </div>
-      <div class="wrap hsc-bar"><i id="hscBar"></i></div>
-    </div>
-  </section>
-
-  <section class="sec facts"><div class="wrap facts-grid">${facts.map(([n, u, l]) => `<div class="fact rv"><b><span data-count="${n}">0</span><small>${u}</small></b><span>${l}</span></div>`).join('')}</div></section>
-
-  <section class="sec ink stack-sec"><div class="wrap">
-    <div class="sec-head rv"><span class="kicker">${T ? 'Süreç' : 'Process'}</span><h2>${t('howTitle')}</h2><p>${t('howLead')}</p></div>
-    <div class="stack">${t('how').map(([h, p], i) => `<article class="stack-card" style="--i:${i}"><span class="how-no">${['I', 'II', 'III'][i]}</span><div><h3>${h}</h3><p>${p}</p></div><span class="stack-step">${T ? 'Adım' : 'Step'} ${i + 1} / 3</span></article>`).join('')}</div>
+  <section class="sec alt"><div class="wrap">
+    <div class="sec-head rv"><span class="kicker">${T ? 'Problemler' : 'Problems'}</span><h2>${t('problemsTitle')}</h2><p>${t('problemsLead')}</p></div>
+    <div class="pgrid">${t('problems').map(([h, p], i) => `<div class="pcard rv"><span class="pcard-ico">${I[PROB_ICONS[i]]}</span><h3>${h}</h3><p>${p}</p></div>`).join('')}</div>
+    <div class="solve rv"><p>${T ? 'Bu sorunların çoğu işe alımdan değil, organizasyon yapısındaki belirsizlikten kaynaklanır.' : 'Most of these problems come not from hiring, but from uncertainty in the structure.'}</p><a class="link-arrow" href="#/hizmetler">${T ? 'Nasıl çözüyoruz' : 'How we solve them'} ${I.arrow}</a></div>
   </div></section>
 
   <section class="sec"><div class="wrap">
+    <div class="sec-head row rv"><div><span class="kicker">${t('services')}</span><h2>${t('servicesTitle')}</h2><p>${t('servicesLead')}</p></div><a class="btn btn-ghost" href="#/hizmetler">${t('services')} ${I.arrow}</a></div>
+    <div class="svc-grid">${SERVICES.map((s, i) => `<a class="svc2 rv" href="#/hizmetler" data-jump="s-${s.id}"><span class="svc2-img"><img src="${PIC + SVC_IMG[s.id]}" alt="" loading="lazy"><span class="svc2-no">0${i + 1}</span></span>
+      <span class="svc2-body"><h3>${L(s.title)}</h3><p>${L(s.short)}</p><span class="svc-out">${I.check} ${L(s.outcome)}</span></span></a>`).join('')}</div>
+  </div></section>
+
+  <section class="sec alt"><div class="wrap split">
+    <div class="photo arch tall rv"><img src="${PIC}team-meeting.jpg" alt="${T ? 'Ekip toplantısı' : 'Team meeting'}" loading="lazy"></div>
+    <div class="rv"><span class="kicker">${T ? 'Yaklaşımımız' : 'Our approach'}</span>
+      <p class="stmt" id="stmt">${(t('approach')[0] + ' ' + t('approach')[1]).split(' ').map((w) => `<span>${w}</span>`).join(' ')}</p>
+      <p class="muted">${t('approach')[2]}</p><a class="btn btn-main" href="#/hakkimizda">${t('about')} ${I.arrow}</a></div>
+  </div></section>
+
+  <section class="sec green"><div class="wrap split">
+    <div class="rv"><span class="kicker">${T ? 'Süreç' : 'Process'}</span><h2>${t('howTitle')}</h2><p class="muted">${t('howLead')}</p>
+      <div class="steps2">${t('how').map(([h, p], i) => `<div class="step2"><span class="step2-no">${i + 1}</span><div><h3>${h}</h3><p>${p}</p></div></div>`).join('')}</div></div>
+    <div class="photo tall rv"><img src="${PIC}presentation.jpg" alt="" loading="lazy"></div>
+  </div></section>
+
+  <section class="sec"><div class="wrap">
+    <div class="sec-head center rv"><span class="kicker">${T ? 'Kimler için' : 'Who we help'}</span><h2>${T ? 'Kurumlar ve <i>adaylar</i> için' : 'For organizations and <i>candidates</i>'}</h2></div>
+    <div class="aud">
+      <a class="aud-card rv" href="#/isverenler"><img src="${PIC}team-success.jpg" alt="" loading="lazy"><div class="aud-body"><span class="kicker">${t('employers')}</span><h3>${T ? 'Doğru ekibi kuralım' : 'Let\'s build the right team'}</h3><p>${L(PAGES.employers)[0]}</p><span class="btn btn-light">${T ? 'Kurumlar için' : 'For employers'} ${I.arrow}</span></div></a>
+      <a class="aud-card rv" href="#/adaylar"><img src="${PIC}candidate.jpg" alt="" loading="lazy"><div class="aud-body"><span class="kicker">${t('candidates')}</span><h3>${T ? 'Sonraki kariyer adımınız' : 'Your next career step'}</h3><p>${L(PAGES.candidates)[0]}</p><span class="btn btn-light">${T ? 'Başvuru yapın' : 'Apply now'} ${I.arrow}</span></div></a>
+    </div>
+  </div></section>
+
+  <section class="sec alt"><div class="wrap">
     <div class="sec-head rv"><span class="kicker">${T ? 'Araçlar' : 'Tools'}</span><h2>${t('toolsTitle')}</h2><p>${t('toolsLead')}</p></div>
     <div class="tools">
       <a class="tool rv" href="#/hr-health-scan#test"><span class="tool-ico">${I.scan}</span><span class="kicker">HR Health Scan</span><h3>${T ? 'Organizasyon sağlık testi' : 'Organizational health check'}</h3><p>${t('scanTeaser')}</p>
@@ -163,34 +165,26 @@ function home() {
     </div>
   </div></section>
 
-  <section class="sec alt"><div class="wrap">
+  <section class="quote-band"><div class="wrap rv"><blockquote>${t('founderQuote')}</blockquote><span class="founder-role">— ${t('founderRole')}</span></div></section>
+
+  <section class="sec"><div class="wrap">
     <div class="sec-head row rv"><div><span class="kicker">${t('insights')}</span><h2>${t('insightsTitle')}</h2><p>${t('insightsLead')}</p></div><a class="btn btn-ghost" href="#/icgoruler">${t('insights')} ${I.arrow}</a></div>
     <div class="arts">${ARTICLES.map((a, i) => articleCard(a, i === 0)).join('')}</div>
   </div></section>
-
-  <section class="quote-sec"><div class="wrap quote-in rv">
-    <span class="quote-mark" aria-hidden="true">“</span>
-    <blockquote>${t('founderQuote')}</blockquote>
-    <span class="founder-role">— ${t('founderRole')}</span>
-  </div></section>
-
-  <section class="finale"><div class="wrap finale-in">
-    <h2 class="rv">${T ? 'Doğru yetenek,<br><i>doğru yapıda.</i>' : 'The right talent,<br><i>in the right structure.</i>'}</h2>
-    <a class="orb mag rv" href="#/randevu"><span>${t('book')}</span>${I.arrow}</a>
-  </div></section>`;
+  ${cta()}`;
 }
 
 /* ---------------- Services / employers / candidates / about ---------------- */
 function servicesPage() {
   return pageHead(tr() ? 'Hizmetlerimiz' : 'Our <i>services</i>', [[t('services')]], tr() ? 'Kurumların organizasyon yapılarını güçlendirmelerine ve insan kaynakları süreçlerini daha etkin hale getirmelerine destek oluyoruz.' : 'We help organizations strengthen their structures and make HR processes more effective.') + `
   <section class="sec"><div class="wrap">${SERVICES.map((s, i) => `<article class="svc-row rv" id="s-${s.id}">
-    <div class="svc-row-l"><span class="svc-big">0${i + 1}</span><span class="svc-ico">${I[s.icon]}</span></div>
-    <div><h2>${L(s.title)}</h2><p class="lead-p">${L(s.long)}</p><div class="svc-out big">${I.check} ${L(s.outcome)}</div>
+    <div class="svc-row-img"><img src="${PIC + SVC_IMG[s.id]}" alt="" loading="lazy"></div>
+    <div><span class="svc-tag">0${i + 1} · ${tr() ? 'Hizmet' : 'Service'}</span><h2>${L(s.title)}</h2><p class="lead-p">${L(s.long)}</p><div class="svc-out big">${I.check} ${L(s.outcome)}</div>
       <div class="acts"><a class="btn btn-main" href="#/randevu">${t('book')} ${I.arrow}</a><button class="btn btn-ghost" data-ai="${esc(L(s.title))}">${I.ai} ${t('askAI')}</button></div></div></article>`).join('')}</div></section>${cta()}`;
 }
 function employersPage() {
   const p = PAGES.employers;
-  return pageHead(tr() ? 'Kurumlar <i>için</i>' : 'For <i>employers</i>', [[t('employers')]]) + `
+  return pageHead(tr() ? 'Kurumlar <i>için</i>' : 'For <i>employers</i>', [[t('employers')]], '', '', 'team-meeting.jpg') + `
   <section class="sec"><div class="wrap split">
     <div class="rv">${p[lang].map((x, i) => `<p class="${i ? 'muted' : 'lead-p'}">${x}</p>`).join('')}
       <div class="note-box"><small>${tr() ? 'Yaklaşımımız' : 'Our approach'}</small>${t('approach')[0]} ${tr() ? 'Bu nedenle çalışmaya her zaman organizasyon yapısını ve ihtiyaçları anlamakla başlarız.' : 'That\'s why we always start by understanding the structure and its needs.'}</div></div>
@@ -201,7 +195,7 @@ function employersPage() {
 }
 function candidatesPage() {
   const p = PAGES.candidates;
-  return pageHead(tr() ? 'Adaylar <i>için</i>' : 'For <i>candidates</i>', [[t('candidates')]]) + `
+  return pageHead(tr() ? 'Adaylar <i>için</i>' : 'For <i>candidates</i>', [[t('candidates')]], '', '', 'interview.jpg') + `
   <section class="sec"><div class="wrap split">
     <div class="rv"><p class="lead-p">${p[lang][0]}</p><h3 class="h3">${tr() ? 'Başvuru süreci' : 'Application process'}</h3>
       <ol class="steps">${L(p.process).map((x, i) => `<li><b>${i + 1}</b><span>${x}</span></li>`).join('')}</ol>
@@ -210,7 +204,7 @@ function candidatesPage() {
   </div></section>`;
 }
 function aboutPage() {
-  return pageHead(tr() ? 'Hakkımızda' : 'About <i>us</i>', [[t('about')]]) + `
+  return pageHead(tr() ? 'Hakkımızda' : 'About <i>us</i>', [[t('about')]], '', '', 'workshop.jpg') + `
   <section class="sec"><div class="wrap split">
     <div class="rv">${PAGES.about[lang].map((x, i) => `<p class="${i ? 'muted' : 'lead-p'}">${x}</p>`).join('')}</div>
     <div class="rv"><span class="kicker">${tr() ? 'Yaklaşımımız' : 'Our approach'}</span><h2 class="h2s">${t('approachTitle')}</h2><p class="muted">${t('approach')[1]}</p></div>
@@ -241,7 +235,7 @@ function articlePage(id) {
 /* ---------------- HR Health Scan (info + self-assessment) ---------------- */
 function scanPage() {
   const s = PAGES.scan[lang];
-  return pageHead('HR Health <i>Scan</i>', [[t('scan')]], s.intro, tr() ? '45 dakikalık değerlendirme' : '45-minute assessment') + `
+  return pageHead('HR Health <i>Scan</i>', [[t('scan')]], s.intro, tr() ? '45 dakikalık değerlendirme' : '45-minute assessment', 'consulting.jpg') + `
   <section class="sec"><div class="wrap scan-info">
     <div class="rv"><h3 class="h3">${tr() ? 'Neleri değerlendiriyoruz?' : 'What we assess'}</h3><ul class="ticks">${s.what.map((x) => `<li>${I.check}<span>${x}</span></li>`).join('')}</ul></div>
     <div class="rv"><h3 class="h3">${tr() ? 'Kimler için uygun?' : 'Who it\'s for'}</h3><ul class="ticks">${s.who.map((x) => `<li>${I.check}<span>${x}</span></li>`).join('')}</ul></div>
@@ -374,7 +368,7 @@ function contactPage() {
       <a class="ci wide" href="${COMPANY.maps}" target="_blank" rel="noopener"><span>${I.pin}</span><small>${t('address')}</small><p>${COMPANY.address}</p></a>
       <a class="ci" href="${COMPANY.phoneHref}"><span>${I.phone}</span><small>${t('phone')}</small><p>${COMPANY.phone}</p></a>
       <a class="ci" href="mailto:${COMPANY.email}"><span>${I.mail}</span><small>${t('email')}</small><p>${COMPANY.email}</p></a>
-    </div><a class="mapcard" href="${COMPANY.maps}" target="_blank" rel="noopener"><span class="mapdot">${I.pin}</span><span class="maplbl">${t('openMap')} ${I.arrow}</span></a></div>
+    </div><a class="mapcard" href="${COMPANY.maps}" target="_blank" rel="noopener"><img src="assets/img/office.jpg" alt="" loading="lazy"><span class="mapdot">${I.pin}</span><span class="maplbl">${t('openMap')} ${I.arrow}</span></a></div>
     ${form('fContact', [{ k: 'firstName', req: true }, { k: 'lastName', req: true }, { k: 'email', type: 'email', req: true }, { k: 'phone', type: 'tel' }, { k: 'message', type: 'textarea', req: true, full: true }, { k: 'kvkk', type: 'consent' }], tr() ? 'Bize ulaşın' : 'Get in touch')}
   </div></section>`;
 }
